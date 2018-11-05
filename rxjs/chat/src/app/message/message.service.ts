@@ -28,10 +28,10 @@ export class MessagesService {
 
     constructor() {
         this.messages = this.updates.pipe(
-            //累加S
-            scan((messages: Message[], operation: IMessagesOperation) => {
-                console.log('messages scan:', operation)
-                return operation(messages);
+            //流从create来，通过map转换为IMessageOperation值
+            scan((messages: Message[], valueOption: IMessagesOperation) => {
+                console.log('messages scan:', valueOption)
+                return valueOption(messages);
             }, initialMessages),
             //为新的订阅者缓存一个数据
             publishReplay(1),
@@ -40,7 +40,7 @@ export class MessagesService {
         )
 
         this.create.pipe(
-            //返回一个方法给 Updates流
+            //返回一个方法(IMessagesOperation)给 Updates流去Scan
             map(function (message: Message): IMessagesOperation {
                 console.log('create map1: ' + message.text);
                 return (messages: Message[]) => {
