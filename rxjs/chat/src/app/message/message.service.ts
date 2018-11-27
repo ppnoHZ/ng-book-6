@@ -75,6 +75,7 @@ export class MessagesService {
     }
 
     messagesForThreadUser(thread: Thread, user: User): Observable<Message> {
+        //给定一个会话，和user获取消息，场景：获取当前会话中不是我自己发的消息
         return this.newMessages.pipe(
             filter((message: Message) => {
                 return (message.thread.id === thread.id) && (message.author.id !== user.id)
